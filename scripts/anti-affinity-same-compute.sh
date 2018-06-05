@@ -62,6 +62,14 @@ echo -e "===============SET UP FINISHED===============\n"
 #Begin the test
 echo -e "===============TEST PHASE===============\n"
 
+if [ "`nova service-list | grep compute-1.localdomain`" ];then
+  export COMPUTE1_ID=`nova service-list | grep compute-1.localdomain | awk '{print $2}'`
+  echo Taking down compute 1 
+  echo nova service-force-down $COMPUTE1_ID
+  nova service-force-down $COMPUTE1_ID
+  echo
+fi
+
 #Boot 2 Anti-Affinity Servers on the same host
 echo -e "==========Creating Soft-Anti-Affinity-Servers==========\n"
 
@@ -86,6 +94,13 @@ echo
 sleep 60
 
 echo -e "==========Soft-Anti-Affinity-Servers Created==========\n"
+
+if [ "`nova service-list | grep compute-1.localdomain`" ];then
+  echo Starting up compute 1 
+  echo nova service-force-down --unset $COMPUTE1_ID
+  nova service-force-down --unset $COMPUTE1_ID
+  echo
+fi
 
 #Compare the compute nodes of the servers to make sure they match
 echo -e "==========Comparing Hypervisors==========\n"
