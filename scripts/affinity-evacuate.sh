@@ -63,10 +63,13 @@ echo -e "==========Creating Soft-Affinity-Servers==========\n"
 
 #Grab the network to boot the server off of
 if [ -z "`openstack network list | grep private`" ];then
-  export NETWORK_ID=`openstack network list | grep nova | awk '{print $2}'`
+  if [ -z "`openstack network list | grep public`" ];then 
+   export NETWORK_ID=`openstack network list | grep nova | awk '{print $2}'`
+  else
+   export NETWORK_ID=`openstack network list | grep public | awk '{print $2}'`
+  fi
 else
   export NETWORK_ID=`openstack network list | grep private | awk '{print $2}'`
-fi
 
 #Boot the servers
 echo openstack server create --flavor $FLAVOR_ID --image $CIRROS_ID --hint group=$AFFINITY_ID --nic net-id=$NETWORK_ID soft-affinity-server0

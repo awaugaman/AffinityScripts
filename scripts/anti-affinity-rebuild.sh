@@ -76,7 +76,11 @@ echo -e "==========Creating Soft-Anti-Affinity-Servers==========\n"
 
 #Grab the network to boot the server off of
 if [ -z "`openstack network list | grep private`" ];then
-  export NETWORK_ID=`openstack network list | grep nova | awk '{print $2}'`
+  if [ -z "`openstack network list | grep public`" ];then 
+   export NETWORK_ID=`openstack network list | grep nova | awk '{print $2}'`
+  else
+   export NETWORK_ID=`openstack network list | grep public | awk '{print $2}'`
+  fi
 else
   export NETWORK_ID=`openstack network list | grep private | awk '{print $2}'`
 fi
