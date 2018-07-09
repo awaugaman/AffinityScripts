@@ -70,6 +70,7 @@ if [ -z "`openstack network list | grep private`" ];then
   fi
 else
   export NETWORK_ID=`openstack network list | grep private | awk '{print $2}'`
+fi
 
 #Boot the servers
 echo openstack server create --flavor $FLAVOR_ID --image $CIRROS_ID --hint group=$AFFINITY_ID --nic net-id=$NETWORK_ID soft-affinity-server0
