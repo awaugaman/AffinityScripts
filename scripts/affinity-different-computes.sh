@@ -40,11 +40,12 @@ echo -e "==========Flavor Created==========\n"
 echo -e "==========Creating Image==========\n"
 
 if [ -z "`openstack image list | grep cirros`" ];then
-  if [ -z "`openstack network list | grep public`" ];then 
-   export NETWORK_ID=`openstack network list | grep nova | awk '{print $2}'`
-  else
-   export NETWORK_ID=`openstack network list | grep public | awk '{print $2}'`
+  if [ ! -f /home/stack/cirros-0.4.0-x86_64-disk.img ];then
+    wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
   fi
+  echo openstack image create --file cirros-0.4.0-x86_64-disk.img cirros
+  openstack image create --file cirros-0.4.0-x86_64-disk.img cirros
+  echo 
 else
   echo openstack image show cirros
   openstack image show cirros
